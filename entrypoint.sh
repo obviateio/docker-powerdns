@@ -45,6 +45,21 @@ if $MYSQL_AUTOCONF ; then
   unset -v MYSQL_PASS
 fi
 
+# set allow-axfr-ips by ENV Variable
+if $ALLOW_AXFR; then
+  sed -r -i "s/^[# ]*allow-axfr-ips=.*/allow-axfr-ips=${ALLOW_AXFR_IPS}/g" /etc/pdns/pdns.conf
+  sed -r -i "s/^disable-axfr=.*/disable-axfr=no/g" /etc/pdns/pdns.conf
+fi
+
+# API Settings by ENV
+if $API; then
+  sed -r -i "s/^webservers=.*/webserver=yes/g" /etc/pdns/pdns.conf
+  sed -r -i "s/^api=.*/api=yes/g" /etc/pdns/pdns.conf
+  sed -r -i "s/^[# ]*api-key=.*/api-key=${API_KEY}/g" /etc/pdns/pdns.conf
+fi
+
+
+
 # Run pdns server
 trap "pdns_control quit" SIGHUP SIGINT SIGTERM
 

@@ -50,6 +50,11 @@ $ docker run --name pdns \
   * `MYSQL_DB=pdns`
 * Want to disable mysql initialization? Use `MYSQL_AUTOCONF=false`
 * Want to use own config files? Mount a Volume to `/etc/pdns/conf.d` or simply overwrite `/etc/pdns/pdns.conf`
+* Want to allow zone transfers? Set `ALLOW_AXFR_IPS` to a IP/Subnet and `ALLOW_AXFR=true`
+* API Settings
+  * `API=true/false`
+  * `API_KEY=somethinghere`
+
 
 **PowerDNS Configuration:**
 
@@ -69,4 +74,3 @@ See `docker run --rm psitrax/powerdns --help`
 ### Credits
 
 * Mathias Kaufmann <me@stei.gr>: Reduced image size
-

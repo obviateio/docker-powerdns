@@ -1,14 +1,18 @@
 FROM alpine
-MAINTAINER Christoph Wiechert <wio@psitrax.de>
+LABEL MAINTAINER="Christoph Wiechert <wio@psitrax.de>"
 
-ENV REFRESHED_AT="2017-11-30" \
+ENV REFRESHED_AT="2018-01-27" \
     POWERDNS_VERSION=4.1.0 \
     MYSQL_AUTOCONF=true \
     MYSQL_HOST="mysql" \
     MYSQL_PORT="3306" \
     MYSQL_USER="root" \
     MYSQL_PASS="root" \
-    MYSQL_DB="pdns"
+    MYSQL_DB="pdns" \
+    API=false \
+    API_KEY="changeme" \
+    ALLOW_AXFR=false \
+    ALLOW_AXFR_IPS="127.0.0.1/32"
 
 RUN apk --update add mysql-client mariadb-client-libs libpq sqlite-libs libstdc++ libgcc && \
     apk add --virtual build-deps \
@@ -27,6 +31,6 @@ RUN apk --update add mysql-client mariadb-client-libs libpq sqlite-libs libstdc+
 ADD schema.sql pdns.conf /etc/pdns/
 ADD entrypoint.sh /
 
-EXPOSE 53/tcp 53/udp
+EXPOSE 53/tcp 53/udp 8081/tcp
 
 ENTRYPOINT ["/entrypoint.sh"]

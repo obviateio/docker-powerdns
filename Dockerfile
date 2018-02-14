@@ -19,7 +19,7 @@ RUN apk --update add libstdc++ libgcc libcurl openssl-dev && \
     apk del --purge build-deps && \
     rm -rf /tmp/pdns-$POWERDNS_VERSION /var/cache/apk/*
 
-ADD schema.sql pdns.conf /etc/pdns/
+ADD pdns.conf /etc/pdns/
 ADD entrypoint.sh /
 
 EXPOSE 53/tcp 53/udp 8081/tcp

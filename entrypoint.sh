@@ -12,9 +12,10 @@ if $ALLOW_AXFR; then
   sed -r -i "s/^disable-axfr=.*/disable-axfr=no/g" /etc/pdns/pdns.conf
 fi
 
-# set allow-axfr-ips by ENV Variable
-if $REMOTE_CONNECTION_STRING; then
-  sed -r -i "s/^[# ]*remote-connection-string=.*/remote-connection-string=${REMOTE_CONNECTION_STRING}/g" /etc/pdns/pdns.conf
+# set remote-connection-string
+if [ ! -z "$REMOTE_CONNECTION_STRING" ]; then
+  # Need to use | for sed delim since URL's have /'s
+  sed -r -i "s|^remote-connection-string=.*|remote-connection-string=${REMOTE_CONNECTION_STRING}|g" /etc/pdns/pdns.conf
 fi
 
 

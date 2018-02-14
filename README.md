@@ -1,14 +1,12 @@
 # PowerDNS Docker Container
 
-[![Image Size](https://images.microbadger.com/badges/image/psitrax/powerdns.svg)](https://microbadger.com/images/psitrax/powerdns)
-[![Docker Stars](https://img.shields.io/docker/stars/psitrax/powerdns.svg)](https://hub.docker.com/r/psitrax/powerdns/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/psitrax/powerdns.svg)](https://hub.docker.com/r/psitrax/powerdns/)
-[![Docker Automated buil](https://img.shields.io/docker/automated/psitrax/powerdns.svg)](https://hub.docker.com/r/psitrax/powerdns/)
+[![Image Size](https://images.microbadger.com/badges/image/shakataganai/powerdns-remote.svg)](https://microbadger.com/images/shakataganai/powerdns-remote)
+[![Docker Stars](https://img.shields.io/docker/stars/shakataganai/powerdns-remote.svg)](https://hub.docker.com/r/shakataganai/powerdns-remote/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/shakataganai/powerdns-remote.svg)](https://hub.docker.com/r/shakataganai/powerdns-remote/)
+[![Docker Automated buil](https://img.shields.io/docker/automated/shakataganai/powerdns-remote.svg)](https://hub.docker.com/r/shakataganai/powerdns-remote/)
 
 * Small Alpine based Image
-* MySQL (default), Postgres, SQLight and Bind backend included
-* Automatic MySQL database initialization
-* Latest PowerDNS version (if not pls file an issue)
+* ONLY supports [remote](https://doc.powerdns.com/md/authoritative/backend-remote/) backend
 * Guardian process enabled
 * Graceful shutdown using pdns_control
 
@@ -21,46 +19,13 @@
 ## Usage
 
 ```shell
-# Start a MySQL Container
-$ docker run -d \
-  --name pdns-mysql \
-  -e MYSQL_ROOT_PASSWORD=supersecret \
-  -v $PWD/mysql-data:/var/lib/mysql \
-  mariadb:10.1
-
-$ docker run --name pdns \
-  --link pdns-mysql:mysql \
+$ docker run --name powerdns \
   -p 53:53 \
   -p 53:53/udp \
-  -e MYSQL_USER=root \
-  -e MYSQL_PASS=supersecret \
-  psitrax/powerdns \
-    --cache-ttl=120 \
-    --allow-axfr-ips=127.0.0.1 123.1.2.3
+  --restart=always \
+  -e REMOTE_CONNECTION_STRING="http:url=http://localhost:1234/dns" \
+  -d shakataganai/powerdns-remote
 ```
-
-## Configuration
-
-**Environment Configuration:**
-
-* MySQL connection settings
-  * `MYSQL_HOST=mysql`
-  * `MYSQL_USER=root`
-  * `MYSQL_PASS=root`
-  * `MYSQL_DB=pdns`
-* Want to disable mysql initialization? Use `MYSQL_AUTOCONF=false`
-* Want to use own config files? Mount a Volume to `/etc/pdns/conf.d` or simply overwrite `/etc/pdns/pdns.conf`
-* Want to allow zone transfers? Set `ALLOW_AXFR_IPS` to a IP/Subnet and `ALLOW_AXFR=true`
-* API Settings
-  * `API=true/false`
-  * `API_KEY=somethinghere`
-
-
-**PowerDNS Configuration:**
-
-Append the PowerDNS setting to the command as shown in the example above.  
-See `docker run --rm psitrax/powerdns --help`
-
 
 ## License
 
@@ -69,8 +34,9 @@ See `docker run --rm psitrax/powerdns --help`
 
 ## Maintainer
 
-* Christoph Wiechert <wio@psitrax.de>
+* Jon Davis <github@konsoletek.com>
 
 ### Credits
 
+* Christoph Wiechert <wio@psitrax.de>
 * Mathias Kaufmann <me@stei.gr>: Reduced image size

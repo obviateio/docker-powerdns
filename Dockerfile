@@ -1,26 +1,17 @@
 FROM alpine
-LABEL MAINTAINER="Christoph Wiechert <wio@psitrax.de>"
+LABEL MAINTAINER="Jon Davis <github@konsoletek.com>"
 
-ENV REFRESHED_AT="2018-01-27" \
+ENV REFRESHED_AT="2018-02-14" \
     POWERDNS_VERSION=4.1.0 \
-    MYSQL_AUTOCONF=true \
-    MYSQL_HOST="mysql" \
-    MYSQL_PORT="3306" \
-    MYSQL_USER="root" \
-    MYSQL_PASS="root" \
-    MYSQL_DB="pdns" \
-    API=false \
-    API_KEY="changeme" \
     ALLOW_AXFR=false \
-    ALLOW_AXFR_IPS="127.0.0.1/32"
+    ALLOW_AXFR_IPS="127.0.0.1/32" \
+    REMOTE_CONNECTION_STRING="http:url=http://localhost:1234/dns"
 
-RUN apk --update add mysql-client mariadb-client-libs libpq sqlite-libs libstdc++ libgcc && \
-    apk add --virtual build-deps \
-      g++ make mariadb-dev postgresql-dev sqlite-dev curl boost-dev && \
+RUN apk --update add libstdc++ libgcc libcurl openssl-dev && \
+    apk add --virtual build-deps g++ make curl boost-dev  && \
     curl -sSL https://downloads.powerdns.com/releases/pdns-$POWERDNS_VERSION.tar.bz2 | tar xj -C /tmp && \
     cd /tmp/pdns-$POWERDNS_VERSION && \
-    ./configure --prefix="" --exec-prefix=/usr --sysconfdir=/etc/pdns \
-      --with-modules="bind gmysql gpgsql gsqlite3" --without-lua && \
+    ./configure --prefix="" --exec-prefix=/usr --sysconfdir=/etc/pdns --with-modules="remote" --without-lua && \
     make && make install-strip && cd / && \
     mkdir -p /etc/pdns/conf.d && \
     addgroup -S pdns 2>/dev/null && \

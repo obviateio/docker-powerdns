@@ -8,7 +8,7 @@ set -e
 
 # set allow-axfr-ips by ENV Variable
 if $ALLOW_AXFR; then
-  sed -r -i "s/^[# ]*allow-axfr-ips=.*/allow-axfr-ips=${ALLOW_AXFR_IPS}/g" /etc/pdns/pdns.conf
+  sed -r -i "s|^[# ]*allow-axfr-ips=.*|allow-axfr-ips=${ALLOW_AXFR_IPS}|g" /etc/pdns/pdns.conf
   sed -r -i "s/^disable-axfr=.*/disable-axfr=no/g" /etc/pdns/pdns.conf
 fi
 

@@ -22,6 +22,6 @@ RUN apk --update add libstdc++ libgcc libcurl openssl-dev && \
 ADD pdns.conf /etc/pdns/
 ADD entrypoint.sh /
 
-EXPOSE 53/tcp 53/udp 8081/tcp
+EXPOSE 53/tcp 53/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
